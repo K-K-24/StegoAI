@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Decode Image</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+
+      .container {
+        width: 80%;
+        margin: auto;
+        text-align: center;
+      }
+
+      .decode-form {
+        margin-top: 20px;
+      }
+
+      input[type="file"] {
+        margin: 20px;
+      }
+
+      .btn {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .btn:hover {
+        background-color: #0056b3;
+      }
+
+      #loading {
+        font-size: 20px;
+        color: #333;
+        text-align: center;
+        padding: 20px;
+      }
+
+      .decoded-text {
+        margin-top: 20px;
+        padding: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        color: #333;
+      }
+    </style>
+  </head>
+  <body>
+    {% include 'navbar.html' %}
+    <div id="content-wrap" class="bg">
+      <main>
+        <div class="container enc">
+          <h1>Decode Your Image</h1>
+          <p>
+            Please upload the image that contains the encoded text you wish to
+            decode.
+          </p>
+
+          <form
+            id="decodeForm"
+            class="decode-form"
+            action="{{ url_for('decode') }}"
+            method="post"
+            enctype="multipart/form-data"
+          >
+            <input
+              type="file"
+              class="jpg"
+              id="inputImage"
+              name="inputImage"
+              required
+            />
+            <button type="submit" class="btn">Decode</button>
+          </form>
+
+          <div id="loading" style="display: none">
+            <p class="load">Decoding...</p>
+          </div>
+
+          <textarea
+            style="display: none"
+            class="form-control decoded-text"
+            id="decodedText"
+            name="inputText"
+            rows="3"
+            required
+          ></textarea>
+        </div>
+      </main>
+    </div>
+    {% include 'footer.html' %}
+
+    <script>
+      document.getElementById("decodeForm").onsubmit = function (e) {
+        e.preventDefault();
+        document.getElementById("loading").style.display = "block";
+
+        var formData = new FormData();
+        formData.append(
+          "inputImage",
+          document.getElementById("inputImage").files[0]
+        );
+
+        fetch("{{ url_for('decode') }}", {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            setTimeout(function () {
+              document.getElementById("loading").style.display = "none";
+              document.getElementById("decodedText").style.display = "block";
+              var textDisplay = document.getElementById("decodedText");
+              textDisplay.textContent = data.decodedText; // Display the decoded text
+            }, 5000); // 5-second delay
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            document.getElementById("loading").style.display = "none";
+            document.getElementById("decodedText").textContent =
+              "Failed to decode.";
+          });
+      };
+    </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
+</html>

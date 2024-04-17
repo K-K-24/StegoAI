@@ -1,0 +1,80 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+.bg::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(
+    91,
+    87,
+    87,
+    0.664
+  ); /* Adjust the last number for transparency */
+  z-index: -1;
+}
+
+.bg {
+  position: relative;
+  /* The image used */
+  background-image: url("/static/img/bgrnd.webp");
+  filter: brightness(80%);
+
+  /* Full height */
+  /* height: 100%; */
+
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+#content-wrap {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+footer {
+  margin-top: auto;
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: 10px 0;
+}
+
+/* Add this to your CSS */
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* This will vertically center your content */
+  align-items: center; /* This will horizontally center your content */
+  height: 100vh; /* This ensures the main tag takes up the full viewport height */
+}
+
+.flex_main,
+.enc h2,
+p,
+h1,
+.jpg,
+.load {
+  text-shadow: 2px 2px 8px #000000; /* horizontal-offset vertical-offset blur-radius color */
+  background-color: rgba(0, 0, 0, 0.5); /* semi-transparent black */
+  border-radius: 10px; /* optional for rounded corners */
+  padding: 10px; /* space inside the box */
+  color: #ffffff; /* white */
+  font-weight: bold;
+}
+
+.flex_main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* This will vertically center your content */
+  align-items: center;
+}

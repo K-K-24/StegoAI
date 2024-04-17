@@ -1,0 +1,12 @@
+<!-- /templates/index.html -->
+{% extends 'base.html' %} {% block title %}Home{% endblock %} {% block content
+%}
+<div class="flex_main">
+  <div class="container mt-5">
+    <h1>StegoAI</h1>
+    <p>AI based web application to encode and decode text within images.</p>
+    <a href="{{ url_for('encode') }}" class="btn btn-primary">Encode</a>
+    <a href="{{ url_for('decode') }}" class="btn btn-secondary">Decode</a>
+  </div>
+</div>
+{% endblock %}

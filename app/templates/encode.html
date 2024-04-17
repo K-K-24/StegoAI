@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Encode</title>
+    <!-- Bootstrap CSS for styling and responsiveness -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <!-- Custom CSS -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+
+  <body>
+    <!-- Navbar -->
+    {% include 'navbar.html' %}
+
+    <div id="content-wrap" class="bg">
+      <main>
+        <div class="container mt-5 enc">
+          <h2>Encode Text in Image</h2>
+          <form
+            id="encodeForm"
+            action="{{ url_for('encode') }}"
+            method="post"
+            enctype="multipart/form-data"
+          >
+            <div class="form-group">
+              <label for="inputImage">Input Image</label>
+              <input
+                type="file"
+                class="form-control-file jpg"
+                id="inputImage"
+                name="inputImage"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="inputText">Text to Encode</label>
+              <textarea
+                class="form-control"
+                id="inputText"
+                name="inputText"
+                rows="3"
+                required
+              ></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+          <div id="loading" style="display: none">
+            <p class="load">Encrypting...</p>
+            <!-- Add a loading icon here if you like -->
+          </div>
+          <div id="resultImage" class="mt-5">
+            <!-- The result image will be inserted here -->
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <footer>
+      <!-- Footer -->
+      {% include 'footer.html' %}
+    </footer>
+    <script>
+      document.getElementById("encodeForm").onsubmit = function (e) {
+        e.preventDefault(); // Prevent the default form submission
+        document.getElementById("loading").style.display = "block";
+
+        var formData = new FormData();
+        formData.append(
+          "inputImage",
+          document.getElementById("inputImage").files[0]
+        );
+        formData.append(
+          "inputText",
+          document.getElementById("inputText").value
+        );
+
+        fetch("{{ url_for('encode') }}", {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            setTimeout(function () {
+              document.getElementById("loading").style.display = "none";
+
+              var img = document.createElement("img");
+              img_name = data.encodedImagePath; // The path you returned from Flask
+
+              img.src = "/static/encoded/" + data.encodedImagePath;
+              img.style.maxWidth = "500px"; // Adjust size as needed
+              img.style.height = "auto";
+              document.getElementById("resultImage").appendChild(img);
+            }, 5000); // Adjust timeout as needed
+          })
+          .catch((error) => console.error("Error:", error));
+      };
+      //   console.log("Hello world");
+      //   var encodeUrl = document.getElementById("encodeUrl").innerText;
+      //   document.getElementById("encodeForm").onsubmit = function (e) {
+      //     console.log(encodeUrl);
+      //     e.preventDefault(); // Prevent the default form submission
+      //     document.getElementById("loading").style.display = "block";
+
+      //     var formData = new FormData();
+      //     formData.append(
+      //       "inputImage",
+      //       document.getElementById("inputImage").files[0]
+      //     );
+      //     formData.append(
+      //       "inputText",
+      //       document.getElementById("inputText").value
+      //     );
+
+      //     fetch(encodeUrl, {
+      //       method: "POST",
+      //       body: formData,
+      //     })
+      //       .then((response) => response.json())
+      //       .then((data) => {
+      //         setTimeout(function () {
+      //           document.getElementById("loading").style.display = "none";
+      //           console.log(data.encodedImagePath);
+      //           var img = document.createElement("img");
+      //           img.src = data.encodedImagePath; // The path you returned from Flask
+      //           img.style.maxWidth = "500px"; // Adjust size as needed
+      //           img.style.height = "auto";
+      //           document.getElementById("resultImage").appendChild(img);
+      //         }, 5000); // Adjust timeout as needed
+      //       })
+      //       .catch((error) => console.error("Error:", error));
+      //   };
+    </script>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="{{ url_for('static', filename='js/encode.js') }}"></script>
+    <!-- <script src="{{ url_for('static', filename='scripts/script.js') }}"></script> -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
+</html>
